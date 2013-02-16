@@ -17,7 +17,7 @@ app.configure(function(){
 	app.use(app.router);
 });
 
-function sendList(){
+function sendList(source){
 // serve the list to the client
 	var message = '';
 	// loop over the shopping list to push the items to the message
@@ -28,7 +28,7 @@ function sendList(){
 			message = message.concat(shoppingList.pop()+'\n');
 		}
 	}
-	client.sendSms({to:creds.incoming,from:creds.outgoing,body:message},function(err, responseData){
+	client.sendSms({to:source,from:creds.outgoing,body:message},function(err, responseData){
 		if(err){
 			console.log(err);
 		}else{
@@ -42,8 +42,9 @@ function sendList(){
 app.post('/list', function(req,res){
 	// handle the incoming items to add to the list
 	var list = req.body.Body.split(',');
+	var from = req.body.From;
 	if(list[0].toLowerCase().trim() == 'list'|| list.length == 0 || list[0] == ' '){
-		sendList();
+		sendList(from);
 	}else{
 		for(var i=0;i<list.length;i++){
 			shoppingList.push(list[i].toLowerCase().trim());
