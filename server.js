@@ -42,14 +42,15 @@ function sendList(){
 app.post('/list', function(req,res){
 	// handle the incoming items to add to the list
 	var list = req.body.Body.split(',');
-	if(list[0] == 'list' || list[0] == 'List'){
+	if(list[0].toLowerCase().trim() == 'list'|| list.length == 0 || list[0] == ' '){
 		sendList();
 	}else{
 		for(var i=0;i<list.length;i++){
-			shoppingList.push(list[i]);
+			shoppingList.push(list[i].toLowerCase().trim());
 		}
 		console.log('Items added to the list.');
 	}
 });
+console.log('Shopping list server currently running on port 3000 or the one you defined in the environment.');
 app.listen(process.env.PORT || 3000);
 
