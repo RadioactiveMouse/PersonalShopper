@@ -13,6 +13,7 @@ var oldMessage = 'No current list available.';
 
 // configure express
 app.configure(function(){
+	app.set("port",process.env.PORT || 3000);
 	app.use(express.bodyParser());
 	app.use(app.router);
 });
@@ -52,6 +53,6 @@ app.post('/list', function(req,res){
 		console.log('Items added to the list.');
 	}
 });
-console.log('Shopping list server currently running on port 3000 or the one you defined in the environment.');
-app.listen(process.env.PORT || 3000);
+console.log('Shopping list server currently running on port'+app.get("port"));
+app.listen(app.get("port"));
 
