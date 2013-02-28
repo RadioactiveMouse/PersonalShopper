@@ -10,6 +10,7 @@ var Twiml = require('twilio').Twiml;
 var app = express();
 var shoppingList = [];
 var oldMessage = 'No current list available.';
+var check = false;
 
 // configure express
 app.configure(function(){
@@ -23,6 +24,10 @@ function sendList(source){
 	// loop over the shopping list to push the items to the message
 	if(shoppingList.length == 0){
 		message = oldMessage;
+	}else if(check == true){
+		for(var i=0;i<shoppingList.length;i++){
+			message = message.concat(shoppingList[i]);
+		}
 	}else{
 		while(shoppingList.length != 0){
 			message = message.concat(shoppingList.pop()+'\n');
@@ -33,8 +38,11 @@ function sendList(source){
 			console.log(err);
 		}else{
 			console.log("Shopping list sent.");
-			oldMessage = message;
-			message = '';
+			if(check == false){
+				oldMessage = message;
+				message = '';
+			}
+			check = false;
 		}
 	});
 }
@@ -45,7 +53,11 @@ app.post('/list', function(req,res){
 	var from = req.body.From;
 	if(list[0].toLowerCase().trim() == 'list'|| list.length == 0 || list[0] == ' '){
 		sendList(from);
-	}else{
+	}else if(list[0].toLowerCase().trim() == 'check'){
+		check = true;
+		sendList(from);
+	}
+	else{
 		for(var i=0;i<list.length;i++){
 			shoppingList.push(list[i].toLowerCase().trim());
 		}
