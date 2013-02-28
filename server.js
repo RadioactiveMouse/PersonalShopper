@@ -40,8 +40,8 @@ function sendList(source){
 			console.log("Shopping list sent.");
 			if(check == false){
 				oldMessage = message;
-				message = '';
 			}
+			message = '';
 			check = false;
 		}
 	});
